@@ -6,4 +6,7 @@ router.route('/')
     .get(bookingsController.getAllBookings)
     .post(bookingsController.createNewBooking);
 
+router.route('/:id')
+    .get(bookingsController.getBooking);
+
 module.exports = router;
