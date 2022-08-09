@@ -8,10 +8,15 @@ const bookingSchema = new Schema({
         default: Date.now
     },
     bookingStatus: String,
-    bookingItem: {
-        prop: String,
-        desc: String
-    },
+    postBookingStatus: String,
+    bookingItem: String,
+    hotel: String,
+    checkin: Date,
+    airportDep: String,
+    airportArr: String,
+    roundtrip: Boolean,
+    departureDate: Date,
+    returnDate: Date,
     contact: {
         name: String,
         email: String,
@@ -20,11 +25,15 @@ const bookingSchema = new Schema({
         lang: String
     },
     payment: {
-        status: String,
         method: String,
+        status: String,
+        postPaymentStatus: String,
         currency: String,
-        amount: Number
-    }
+        amount: Number,
+        timeLImit: Date,
+        systemTimeLimit: Date,
+    },
+    notes: Array,
 });
 
 module.exports = mongoose.model('Booking', bookingSchema);
