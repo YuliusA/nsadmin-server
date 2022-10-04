@@ -34,9 +34,31 @@ const updateBooking = async (req, res) => {
     }
     if (req.body?.bookingtype) booking.bookingtype = req.body.bookingtype;
     if (req.body?.customer) booking.customer = req.body.customer;
+
     const result = await booking.save();
     res.json(result);
 }
+
+const updateStatus = async (req, res) => {
+    if (!req.params.id) {
+        return res.status(400).json({ 'message': 'Booking ID required' });
+    }
+    const booking = await Booking.findOne({ _id: req.params.id }).exec();
+    if (!booking) {
+        return res.status(204).json({ "message": `No booking matches ID ${req.params.id}.` });
+    }
+
+    if (req.body.postBookingStatus) {
+        booking.postBookingStatus = req.body.postBookingStatus;
+    }
+
+    if (req.body.postPaymentStatus) {
+        booking.payment.postPaymentStatus = req.body.postPaymentStatus;
+    }
+    
+    const updated = await booking.save();
+    res.json(updated);
+};
 
 const deleteBooking = async (req, res) => {
     if (!req?.body?.id) return res.status(400).json({ 'message': 'Booking ID required.' });
@@ -52,7 +74,12 @@ const deleteBooking = async (req, res) => {
 const getBooking = async (req, res) => {
     if (!req?.params?.id) return res.status(400).json({ 'message': 'Booking ID required.' });
 
-    const booking = await Booking.findOne({ _id: req.params.id }).exec();
+    const booking = await Booking.findOne({ _id: req.params.id }).populate({
+        path: 'notes',
+        populate: {
+            path: 'user'
+        }
+    }).exec();
     if (!booking) {
         return res.status(204).json({ "message": `No booking matches ID ${req.params.id}.` });
     }
@@ -63,6 +90,7 @@ module.exports = {
     getAllBookings,
     createNewBooking,
     updateBooking,
+    updateStatus,
     deleteBooking,
     getBooking
 }

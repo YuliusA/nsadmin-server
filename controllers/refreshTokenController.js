@@ -14,6 +14,7 @@ const handleRefreshToken = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
             if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
+            const userid = foundUser._id;
             const roles = Object.values(foundUser.roles);
             const username = foundUser.username;
             const email = foundUser.email;
@@ -31,10 +32,11 @@ const handleRefreshToken = async (req, res) => {
             );
 
             res.json({
-                username,
+                userid,
                 roles,
-                name,
+                username,
                 email,
+                name,
                 accessToken
             });
         }

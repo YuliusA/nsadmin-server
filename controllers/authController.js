@@ -11,6 +11,7 @@ const handleLogin = async (req, res) => {
     // evaluate password 
     const match = await bcrypt.compare(pwd, foundUser.password);
     if (match) {
+        const userid = foundUser._id;
         const roles = Object.values(foundUser.roles).filter(Boolean);
         const username = foundUser.username;
         const email = foundUser.email;
@@ -36,7 +37,6 @@ const handleLogin = async (req, res) => {
         foundUser.refreshToken = refreshToken;
         const result = await foundUser.save();
         console.log(result);
-        // console.log(roles);
 
         // Creates Secure Cookie with refresh token
         res.cookie('jwt', refreshToken, {
@@ -48,10 +48,11 @@ const handleLogin = async (req, res) => {
 
         // Send authorization roles and access token to user
         res.json({
-            username,
+            userid,
             roles,
-            name,
+            username,
             email,
+            name,
             accessToken
         });
 

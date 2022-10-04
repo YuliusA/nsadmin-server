@@ -32,6 +32,10 @@ const userSchema = new Schema({
         Editor: Number,
         Admin: Number
     },
+    notes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Note'
+    }],
     refreshToken: String
 });
 
